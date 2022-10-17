@@ -50,6 +50,17 @@ namespace Individual_Bank_Project
             Console.WriteLine("\nHur mycket vill du ta ut? (använd , för ören!)");
             double withdrawAmount = Convert.ToDouble(Console.ReadLine());
 
+            Console.WriteLine("\nVill du ta ut " + withdrawAmount + "kr ifån konto nummer " + (withdrawFrom/2) + "?\nAcceptera uttaget med din pinkod.");
+            Console.Write("Pinkod: ");
+            string pin = Console.ReadLine();
+
+            if (users[currentAccountIndex][1] != pin)
+            {
+                Console.WriteLine("\nUttaget misslyckades, fel pinkod!\nTryck enter för att återgå till menyn.");
+                Console.ReadKey();
+                Menu(ref currentAccountIndex, ref users);
+            }
+
             // Check if there is enough balance to transfer from that account
             if (Convert.ToDouble(users[currentAccountIndex][withdrawFrom]) >= withdrawAmount)
             {
@@ -59,11 +70,17 @@ namespace Individual_Bank_Project
                 temp -= withdrawAmount;
                 users[currentAccountIndex][withdrawFrom] = Convert.ToString(temp);
 
-                // Tells the user that the transfer was successful
-                Console.WriteLine("\nUttaget lyckades!\nTryck enter för att återgå till menyn.");
+                // Tells the user that the withdraw was successful
+                Console.WriteLine("\nUttaget lyckades!\nHär är den nya summan på ditt konto.\n");
+
+                Console.WriteLine(users[currentAccountIndex][withdrawFrom]);
+
+                Console.WriteLine("\nTryck enter för att återgå till huvudmenyn!");
             } else
             {
                 Console.WriteLine("\nUttaget misslyckades! Du har inte tillräckligt med pengar.\nTryck enter för att återgå till menyn.");
+                Console.ReadKey();
+                Menu(ref currentAccountIndex, ref users);
             }
 
             // Go back to the menu
@@ -110,7 +127,14 @@ namespace Individual_Bank_Project
                 users[currentAccountIndex][transferTo] = Convert.ToString(temp);
 
                 // Tells the user that the transfer was successful
-                Console.WriteLine("\nÖverföringen lyckades!\nTryck enter för att återgå till menyn.");
+                Console.WriteLine("\nÖverföringen lyckades!\nHär är de nya summorna på dina konton.\n");
+
+                for (int i = 2; i < users[currentAccountIndex].Length; i += 2)
+                {
+                    Console.WriteLine(users[currentAccountIndex][i] + ": " + users[currentAccountIndex][i + 1] + "kr");
+                }
+
+                Console.WriteLine("\nTryck enter för att återgå till huvudmenyn!");
             }
 
             // Go back to the menu
@@ -156,6 +180,7 @@ namespace Individual_Bank_Project
                     WithdrawMoney(ref currentAccountIndex, ref users);
                     break;
                 case "4":
+                    Console.Clear();
                     StartProgram(ref currentAccountIndex, ref users);
                     break;
                 default:
@@ -216,9 +241,9 @@ namespace Individual_Bank_Project
             // Initialize all of the 5 users
             users[0] = new string[] { "admin", "0000", "konto", "9999" };
             users[1] = new string[] { "theo", "1111", "sparkonto", "1500,0", "lönekonto", "4000,5" };
-            users[2] = new string[] { "erik", "2222", "sparkonto", "430,0", "lönekonto", "5302,0" };
-            users[3] = new string[] { "kalle", "3333", "sparkonto", "20,5", "lönekonto", "200,25" };
-            users[4] = new string[] { "maja", "4444", "sparkonto", "4300,0", "lönekonto", "23050,25" };
+            users[2] = new string[] { "erik", "2222", "barnkonto", "430,0", "semesterkonto", "5302,0", "lönekonto", "10250,0" };
+            users[3] = new string[] { "kalle", "3333", "godiskonto", "20,5", "lönekonto", "200,25" };
+            users[4] = new string[] { "maja", "4444", "sparkonto", "4300,0", "spelkonto", "23050,25" };
 
             // Return users as "string[][]"
             return users;
